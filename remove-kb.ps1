@@ -9,41 +9,44 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB2952664", #Get Windows 10 assistant
         "KB2976978",
         "KB2876229",
-        "kb2953664"
+        "KB2953664"
 )
 
 
 function hide_update() {
-    param($kb)
-    $i = 0
-    $found = 0
-    Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
+    param($kbList)
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
     $searcher.Online = $false
-    $criteria = "IsInstalled = 0"
+    $criteria = "IsInstalled=0"
     $result = $searcher.Search($criteria)
-    #$result.Updates | Foreach {
-    While ((!$found) -and ($i -lt $result.Updates.Count)) {
-        if ($result.Updates.Item($i).KBArticleIDs -match $kb) {
-            $found = 1
-            if (!$result.Updates.Item($i).IsHidden) {
-                $result.Updates.Item($i).IsHidden = "True"
-                Write-Host -ForegroundColor green "Hidden"
-            }
-            else {
-                Write-Host -ForegroundColor Yellow "Already hidden"
+    Foreach ($kb in $kbList){
+        Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
+        $id = $kb.Replace("KB","")
+        $found = 0
+        Foreach ($update in $result.Updates)  {
+            if ($update.KBArticleIDs -match $id) {
+                $found = 1
+                if (!$update.IsHidden) {
+                    $update.IsHidden = "True"
+                    Write-Host -ForegroundColor green "Hidden"
+                }
+                else {
+                    Write-Host -ForegroundColor Yellow "Already hidden"
+                }
             }
         }
-        $i++
+        if (!$found){ Write-Host -ForegroundColor Red "Not found"}
     }
-    if (!$found){ Write-Host -ForegroundColor Red "Not found"}
+}
+if (stop-process -name GWX -ErrorAction SilentlyContinue) {
+    Write-Output "Killed GWX ..."
 }
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
     Write-Host -NoNewline -ForegroundColor white "Uninstalling $kbID : "
-    if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue)){
+    if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
         wusa.exe /uninstall /KB:$kbNum  /norestart /quiet /log:wsua.log
@@ -61,5 +64,9 @@ Foreach($kbID in $kbIDs){
     else {
         Write-Host -ForegroundColor Yellow ("Not installed")
     }
-    hide_update $kbNum 
 }
+Write-Host "`n Wainting ..."
+Start-Sleep -Seconds 5
+Write-Host "`nHiding Updates"
+Write-Host "--------------`n"
+hide_update $kbIDs
