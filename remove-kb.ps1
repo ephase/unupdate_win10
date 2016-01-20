@@ -44,7 +44,7 @@ Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
     Write-Host -NoNewline -ForegroundColor white "Uninstalling $kbID : "
     if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue)){
-        Write-Host -NoNewline -ForegroundColor DarkGreen "found!" 
+        Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
         wusa.exe /uninstall /KB:$kbNum  /norestart /quiet /log:wsua.log
         Do
@@ -52,10 +52,10 @@ Foreach($kbID in $kbIDs){
     		Start-Sleep -Seconds 3
     	}while(Invoke-Command -ScriptBlock {Get-Process  | Where-Object {$_.name -eq "wusa"}})
         if(Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
-		    Write-Host -NoNewline -ForegroundColor Red "Failed"
+		    Write-Host -ForegroundColor Red "Failed"
 	    }
 	    else{
-		    Write-Host -NoNewline -ForegroundColor Green "Done"
+		    Write-Host -ForegroundColor Green "Done"
 	    }
     }
     else {
