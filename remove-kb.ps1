@@ -1,4 +1,16 @@
-$kbIDs=("KB3035583", "KB2952664", "KB3021917", "KB2976978", "KB2876229")
+$kbIDs=("KB3075249", #telemetry for Win7/8.1
+        "KB3080149", #telemetry for Win7/8.1
+        "KB3021917", #telemetry for Win7
+        "KB3022345", #telemetry
+        "KB3068708", #telemetry
+        "KB3044374", #Get Windows 10 for Win8.1
+        "KB3035583", #Get Windows 10 for Win7sp1/8.1
+        "KB2990214", #Get Windows 10 for Win7 without sp1
+        "KB2952664", #Get Windows 10 assistant
+        "KB2976978",
+        "KB2876229",
+        "kb2953664"
+)
 
 
 function hide_update() {
