@@ -23,19 +23,20 @@ function hide_update() {
     $searcher.Online = $false
     $criteria = "IsInstalled = 0"
     $result = $searcher.Search($criteria)
-    #$result.Updates | Foreach {
-    While ((!$found) -and ($i -lt $result.Updates.Count)) {
-        if ($result.Updates.Item($i).KBArticleIDs -match $kb) {
-            $found = 1
-            if (!$result.Updates.Item($i).IsHidden) {
-                $result.Updates.Item($i).IsHidden = "True"
-                Write-Host -ForegroundColor green "Hidden"
-            }
-            else {
+    Foreach ($update in $result.Updates)  {
+        $found = 0
+        $kb | Foreach {
+            if ($update.KBArticleIDs -match $_) {
+                if (!$updates.Item($i).IsHidden) {
+                    $update($i).IsHidden = "True"
+                    Write-Host -ForegroundColor green "Hidden"
+                    $found = 1
+                }
+                else {
                 Write-Host -ForegroundColor Yellow "Already hidden"
+                }
             }
         }
-        $i++
     }
     if (!$found){ Write-Host -ForegroundColor Red "Not found"}
 }
@@ -43,7 +44,7 @@ function hide_update() {
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
     Write-Host -NoNewline -ForegroundColor white "Uninstalling $kbID : "
-    if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue)){
+    if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
         wusa.exe /uninstall /KB:$kbNum  /norestart /quiet /log:wsua.log
