@@ -20,22 +20,6 @@ function hide_update() {
     $searcher.Online = $false
     $criteria = "IsInstalled=0"
     $result = $searcher.Search($criteria)
-<<<<<<< HEAD
-    Foreach ($update in $result.Updates)  {
-        $found = 0
-        $kb | Foreach {
-            if ($update.KBArticleIDs -match $_) {
-                if (!$updates.Item($i).IsHidden) {
-                    $update($i).IsHidden = "True"
-                    Write-Host -ForegroundColor green "Hidden"
-                    $found = 1
-                }
-                else {
-                Write-Host -ForegroundColor Yellow "Already hidden"
-                }
-            }
-        }
-=======
     Foreach ($kb in $kbList){
         Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
         $id = $kb.Replace("KB","")
@@ -53,7 +37,6 @@ function hide_update() {
             }
         }
         if (!$found){ Write-Host -ForegroundColor Red "Not found"}
->>>>>>> rewrite_hide_update
     }
 }
 if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
