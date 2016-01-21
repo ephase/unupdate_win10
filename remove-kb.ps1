@@ -49,7 +49,7 @@ Foreach($kbID in $kbIDs){
     if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
-        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet /log:wsua.log
+        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
         Do
 	    {
     		Start-Sleep -Seconds 3
