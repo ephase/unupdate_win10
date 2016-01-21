@@ -22,8 +22,9 @@ and cut your Little Pony head.
  * Add privilege elevation error when the script is not launched with Administrator's rights
  * Add the possibility to use arguments when calling the script (then ps script could be call from
  another script)
- * ~~Update the windows update list to hide kb that aren't yet listed~~ *check rewrite_hide_update branch* 
- * ~~Speed up hide_update~~ *check rewrite_hide_update branch* 
+<<<<<<< HEAD
+ * ~~Update the windows update list to hide kb that aren't yet listed~~ 
+ * ~~Speed up hide_update~~  
  * **Tell me**
 
 #License

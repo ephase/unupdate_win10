@@ -9,20 +9,18 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB2952664", #Get Windows 10 assistant
         "KB2976978",
         "KB2876229",
-        "kb2953664"
+        "KB2953664"
 )
 
 
 function hide_update() {
-    param($kb)
-    $i = 0
-    $found = 0
-    Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
+    param($kbList)
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
     $searcher.Online = $false
-    $criteria = "IsInstalled = 0"
+    $criteria = "IsInstalled=0"
     $result = $searcher.Search($criteria)
+<<<<<<< HEAD
     Foreach ($update in $result.Updates)  {
         $found = 0
         $kb | Foreach {
@@ -37,8 +35,29 @@ function hide_update() {
                 }
             }
         }
+=======
+    Foreach ($kb in $kbList){
+        Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
+        $id = $kb.Replace("KB","")
+        $found = 0
+        Foreach ($update in $result.Updates)  {
+            if ($update.KBArticleIDs -match $id) {
+                $found = 1
+                if (!$update.IsHidden) {
+                    $update.IsHidden = "True"
+                    Write-Host -ForegroundColor green "Hidden"
+                }
+                else {
+                    Write-Host -ForegroundColor Yellow "Already hidden"
+                }
+            }
+        }
+        if (!$found){ Write-Host -ForegroundColor Red "Not found"}
+>>>>>>> rewrite_hide_update
     }
-    if (!$found){ Write-Host -ForegroundColor Red "Not found"}
+}
+if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
+    Write-Host "GWX process stopped ..."
 }
 
 Foreach($kbID in $kbIDs){
@@ -47,7 +66,7 @@ Foreach($kbID in $kbIDs){
     if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
-        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet /log:wsua.log
+        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
         Do
 	    {
     		Start-Sleep -Seconds 3
@@ -62,5 +81,9 @@ Foreach($kbID in $kbIDs){
     else {
         Write-Host -ForegroundColor Yellow ("Not installed")
     }
-    hide_update $kbNum 
 }
+Write-Host "`n Wainting ..."
+Start-Sleep -Seconds 5
+Write-Host "`nHiding Updates"
+Write-Host "--------------`n"
+hide_update $kbIDs
