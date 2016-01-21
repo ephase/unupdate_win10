@@ -65,8 +65,7 @@ Foreach($kbID in $kbIDs){
         Write-Host -ForegroundColor Yellow ("Not installed")
     }
 }
-Write-Host "`n Wainting ..."
-Start-Sleep -Seconds 5
 Write-Host "`nHiding Updates"
 Write-Host "--------------`n"
+
 hide_update $kbIDs
