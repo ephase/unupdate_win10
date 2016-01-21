@@ -39,8 +39,8 @@ function hide_update() {
         if (!$found){ Write-Host -ForegroundColor Red "Not found"}
     }
 }
-if (stop-process -name GWX -ErrorAction SilentlyContinue) {
-    Write-Output "Killed GWX ..."
+if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
+    Write-Host "GWX process stopped ..."
 }
 
 Foreach($kbID in $kbIDs){
