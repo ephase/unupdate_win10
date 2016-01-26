@@ -19,6 +19,11 @@ $sheduledTasks=(
     "regreshgwxcontent"
 )
 
+# You need to modify this variable whith administrator group name
+# Here for French Windows this is Administrateurs
+$adminGroup="Administrateurs"
+$yes="O"
+
 function remove_tasks () {
     param($taskList)
     Foreach ($task in $taskList){
@@ -30,9 +35,9 @@ function remove_tasks () {
             Catch {
                 Write-Host -Nonewline -ForegroundColor white " Error "
             }
-            Write-Host -ForegroundColor Green "Done"
+            Write-Host -ForegroundColor Green " Done"
         }
-        else { Write-Host -ForegroundColor Yellow "Already removed"}
+        else { Write-Host -ForegroundColor Yellow " Already removed"}
     }
 }
 
@@ -65,6 +70,10 @@ function hide_update() {
 if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
     Write-Host "GWX process stopped ..."
 }
+#Remove GWX Files (test)
+takeown /F "$env:WINDIR\System32\GWX" /R /D $yes
+icacls "$env:WINDIR\System32\GWX" /C /grant $adminGroup":F" /T
+Remove-Item $env:WINDIR\System32\GWX\*
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
@@ -72,7 +81,7 @@ Foreach($kbID in $kbIDs){
     if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
-        #wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
+        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
         Do
 	    {
     		Start-Sleep -Seconds 3
@@ -91,5 +100,5 @@ Foreach($kbID in $kbIDs){
 Write-Host "`nHiding Updates"
 Write-Host "--------------`n"
 
-#hide_update $kbIDs
+hide_update $kbIDs
 remove_tasks $sheduledTasks
