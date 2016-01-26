@@ -12,6 +12,29 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB2953664"
 )
 
+$sheduledTasks=(
+    "launchtrayprocess",
+    "refreshgwxconfig",
+    "refreshgwxconfigandcontent",
+    "regreshgwxcontent"
+)
+
+function remove_tasks () {
+    param($taskList)
+    Foreach ($task in $taskList){
+        Write-Host -ForegroundColor white -NoNewline "Remove Task " $task
+        if (Get-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue) {
+            Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
+            Write-Host -Nonewline -ForegroundColor white "removing ... "
+            Try {Unregister-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue -Confirm:$false}
+            Catch {
+                Write-Host -Nonewline -ForegroundColor white " Error "
+            }
+            Write-Host -ForegroundColor Green "Done"
+        }
+        else { Write-Host -ForegroundColor Yellow "Already removed"}
+    }
+}
 
 function hide_update() {
     param($kbList)
@@ -49,7 +72,7 @@ Foreach($kbID in $kbIDs){
     if (Get-HotFix -Id $kbID -ErrorAction SilentlyContinue){
         Write-Host -NoNewline -ForegroundColor DarkGreen "found! " 
         Write-Host -Nonewline -ForegroundColor white "removing ... "
-        wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
+        #wusa.exe /uninstall /KB:$kbNum  /norestart /quiet
         Do
 	    {
     		Start-Sleep -Seconds 3
@@ -68,4 +91,5 @@ Foreach($kbID in $kbIDs){
 Write-Host "`nHiding Updates"
 Write-Host "--------------`n"
 
-hide_update $kbIDs
+#hide_update $kbIDs
+remove_tasks $sheduledTasks
