@@ -11,28 +11,45 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB2876229",
         "KB2953664"
 )
-
 $sheduledTasks=(
-    "launchtrayprocess",
-    "refreshgwxconfig",
-    "refreshgwxconfigandcontent",
-    "regreshgwxcontent"
+    @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "refreshgwxconfig"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "refreshgwxconfigandcontent"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "regreshgwxcontent"; directory = "\Microsoft\Windows\Setup\GWX"}
 )
 
 function remove_tasks () {
     param($taskList)
     Foreach ($task in $taskList){
-        Write-Host -ForegroundColor white -NoNewline "Remove Task " $task
-        if (Get-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue) {
-            Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
-            Write-Host -Nonewline -ForegroundColor white "removing ... "
-            Try {Unregister-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue -Confirm:$false}
-            Catch {
-                Write-Host -Nonewline -ForegroundColor white " Error "
+        Write-Host -ForegroundColor white -NoNewline "Remove Task " $task.name
+        if ($PSVersionTable.PSVersion.Major > 2) {
+            if (Get-ScheduledTask -TaskName $task.name -ErrorAction SilentlyContinue) {
+                Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
+                Write-Host -Nonewline -ForegroundColor white "removing ... "
+                Try {Unregister-ScheduledTask -TaskName $task.name -ErrorAction SilentlyContinue -Confirm:$false}
+                Catch {
+                    Write-Host -Nonewline -ForegroundColor white " Error "
+                }
+                Write-Host -ForegroundColor Green " Done"
             }
-            Write-Host -ForegroundColor Green "Done"
+            else { Write-Host -ForegroundColor Yellow " Already removed"}
         }
-        else { Write-Host -ForegroundColor Yellow "Already removed"}
+        else {
+            $currentTask =  $task.directory + "\" + $task.name
+            if(schtasks /Query /TN $currentTask 2>$null) {
+                Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
+                Write-Host -Nonewline -ForegroundColor white "removing ... "
+                try{
+                    echo $yes | schtasks /Delete /TN $currentTask /F 2>$null
+                }
+                Catch {
+                    Write-Host -Nonewline -ForegroundColor white " Error "
+                }
+                Write-Host -ForegroundColor green "Done"
+
+            }
+            else { Write-Host -ForegroundColor Yellow " Already removed"}
+        }
     }
 }
 
