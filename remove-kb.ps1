@@ -79,9 +79,15 @@ function hide_update() {
         if (!$found){ Write-Host -ForegroundColor Red "Not found"}
     }
 }
-if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
-    Write-Host "GWX process stopped ..."
+
+Write-Host -Nonewline -ForegroundColor white "Searching gor GWX process ... "
+if (Get-Process -name GWX -ErrorAction SilentlyContinue}) {
+    Write-Host -ForegroundColor DarkGreen -NoNewLine "Running "
+    Write-Host -Nonewline -ForegroundColor white "removing ... "
+    Try {Stop-Process -name GWX -Force -ErrorAction SilentlyContinue}
+    Catch { Write-Host -ForegroundColor Red "Error"}
 }
+else { Write-Host -ForegroundColor Yellow ("Not running")}
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
