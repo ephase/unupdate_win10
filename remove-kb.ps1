@@ -22,7 +22,7 @@ function remove_tasks () {
     param($taskList)
     Foreach ($task in $taskList){
         Write-Host -ForegroundColor white -NoNewline "Remove Task " $task.name
-        if ($PSVersionTable.PSVersion.Major > 2) {
+        if ($PSVersionTable.PSVersion.Major -gt 2) {
             if (Get-ScheduledTask -TaskName $task.name -ErrorAction SilentlyContinue) {
                 Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
                 Write-Host -Nonewline -ForegroundColor white "removing ... "
