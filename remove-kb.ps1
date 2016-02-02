@@ -84,7 +84,7 @@ function hide_update() {
     }
 }
 
-Write-Host -Nonewline -ForegroundColor white "Searching gor GWX process ... "
+Write-Host -Nonewline -ForegroundColor white "Searching for GWX process ... "
 if (Get-Process -name GWX -ErrorAction SilentlyContinue}) {
     Write-Host -ForegroundColor DarkGreen -NoNewLine "Running "
     Write-Host -Nonewline -ForegroundColor white "removing ... "
