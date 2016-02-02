@@ -55,11 +55,7 @@ function remove_tasks () {
                     Write-Host -Nonewline -ForegroundColor white " Error "
                 }
                 Write-Host -ForegroundColor green "Done"
-
-            }
-            Write-Host -ForegroundColor Green " Done"
-        }
-        else { Write-Host -ForegroundColor Yellow " Already removed"}
+            else { Write-Host -ForegroundColor Yellow " Already removed" }
     }
 }
 
@@ -86,12 +82,12 @@ function hide_update() {
                 }
             }
         }
-        if (!$found){ Write-Host -ForegroundColor Red "Not found"}
+        if (!$found){ Write-Host -ForegroundColor Red "Not found" }
     }
 }
 
 Write-Host -Nonewline -ForegroundColor white "Searching for GWX process ... "
-if (Get-Process -name GWX -ErrorAction SilentlyContinue}) {
+if (Get-Process -name GWX -ErrorAction SilentlyContinue) {
     Write-Host -ForegroundColor DarkGreen -NoNewLine "Running "
     Write-Host -Nonewline -ForegroundColor white "removing ... "
     Try {Stop-Process -name GWX -Force -ErrorAction SilentlyContinue}
