@@ -100,9 +100,11 @@ if (Get-Process -name GWX -ErrorAction SilentlyContinue}) {
 else { Write-Host -ForegroundColor Yellow ("Not running")}
 
 #Remove GWX Files (test)
-takeown /F "$env:WINDIR\System32\GWX" /R /D $yes
-icacls "$env:WINDIR\System32\GWX" /C /grant $adminGroup":F" /T
-Remove-Item $env:WINDIR\System32\GWX\*
+takeown /F "$env:WINDIR\System32\GWX" /R /D $yes 2>&1 | Out-Null
+icacls "$env:WINDIR\System32\GWX" /C /grant $adminGroup":F" /T 2>&1 | Out-Null
+Try{ Remove-Item $env:WINDIR\System32\GWX\* -Force -Recurse -ErrorAction SilentlyContinue}
+Catch {Write-Host -ForegroundColor Red "Some files can't be deleted."}
+
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
