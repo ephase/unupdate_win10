@@ -15,7 +15,7 @@ $sheduledTasks=(
     @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
     @{name = "refreshgwxconfig"; directory = "\Microsoft\Windows\Setup\GWX"},
     @{name = "refreshgwxconfigandcontent"; directory = "\Microsoft\Windows\Setup\GWX"},
-    @{name = "regreshgwxcontent"; directory = "\Microsoft\Windows\Setup\GWX"}
+    @{name = "refreshgwxcontent"; directory = "\Microsoft\Windows\Setup\GWX"}
 )
 
 function remove_tasks () {
