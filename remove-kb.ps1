@@ -1,4 +1,5 @@
-$kbIDs=("KB3075249", #telemetry for Win7/8.1
+$kbIDs=("KB2976978", #telemetry for Win8/8.1
+        "KB3075249", #telemetry for Win7/8.1
         "KB3080149", #telemetry for Win7/8.1
         "KB3021917", #telemetry for Win7
         "KB3022345", #telemetry
@@ -7,16 +8,18 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB3035583", #Get Windows 10 for Win7sp1/8.1
         "KB2990214", #Get Windows 10 for Win7 without sp1
         "KB2952664", #Get Windows 10 assistant
-        "KB2976978",
-        "KB2876229",
+        "KB3075853", #Update on Win8.1/Server 2012R2
+        "KB3065987", #Update for Windows Update on Win7/Server 2008R2
+        "KB3050265", #Update for Windows Update on Win7
+        "KB3075851", #Update for Windows Update on Win7
+        "KB2902907",
         "KB2953664"
 )
-
 $sheduledTasks=(
-    "launchtrayprocess",
-    "refreshgwxconfig",
-    "refreshgwxconfigandcontent",
-    "regreshgwxcontent"
+    @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "refreshgwxconfig"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "refreshgwxconfigandcontent"; directory = "\Microsoft\Windows\Setup\GWX"},
+    @{name = "refreshgwxcontent"; directory = "\Microsoft\Windows\Setup\GWX"}
 )
 
 # You need to modify this variable whith administrator group name
@@ -27,13 +30,32 @@ $yes="O"
 function remove_tasks () {
     param($taskList)
     Foreach ($task in $taskList){
-        Write-Host -ForegroundColor white -NoNewline "Remove Task " $task
-        if (Get-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue) {
-            Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
-            Write-Host -Nonewline -ForegroundColor white "removing ... "
-            Try {Unregister-ScheduledTask -TaskName $task -ErrorAction SilentlyContinue -Confirm:$false}
-            Catch {
-                Write-Host -Nonewline -ForegroundColor white " Error "
+        Write-Host -ForegroundColor white -NoNewline "Remove Task " $task.name
+        if ($PSVersionTable.PSVersion.Major -gt 2) {
+            if (Get-ScheduledTask -TaskName $task.name -ErrorAction SilentlyContinue) {
+                Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
+                Write-Host -Nonewline -ForegroundColor white "removing ... "
+                Try {Unregister-ScheduledTask -TaskName $task.name -ErrorAction SilentlyContinue -Confirm:$false}
+                Catch {
+                    Write-Host -Nonewline -ForegroundColor white " Error "
+                }
+                Write-Host -ForegroundColor Green " Done"
+            }
+            else { Write-Host -ForegroundColor Yellow " Already removed"}
+        }
+        else {
+            $currentTask =  $task.directory + "\" + $task.name
+            if(schtasks /Query /TN $currentTask 2>$null) {
+                Write-Host -NoNewline -ForegroundColor DarkGreen " found! "
+                Write-Host -Nonewline -ForegroundColor white "removing ... "
+                try{
+                    echo $yes | schtasks /Delete /TN $currentTask /F 2>$null
+                }
+                Catch {
+                    Write-Host -Nonewline -ForegroundColor white " Error "
+                }
+                Write-Host -ForegroundColor green "Done"
+
             }
             Write-Host -ForegroundColor Green " Done"
         }
@@ -67,9 +89,16 @@ function hide_update() {
         if (!$found){ Write-Host -ForegroundColor Red "Not found"}
     }
 }
-if (stop-process -name GWX -Force -ErrorAction SilentlyContinue) {
-    Write-Host "GWX process stopped ..."
+
+Write-Host -Nonewline -ForegroundColor white "Searching for GWX process ... "
+if (Get-Process -name GWX -ErrorAction SilentlyContinue}) {
+    Write-Host -ForegroundColor DarkGreen -NoNewLine "Running "
+    Write-Host -Nonewline -ForegroundColor white "removing ... "
+    Try {Stop-Process -name GWX -Force -ErrorAction SilentlyContinue}
+    Catch { Write-Host -ForegroundColor Red "Error"}
 }
+else { Write-Host -ForegroundColor Yellow ("Not running")}
+
 #Remove GWX Files (test)
 takeown /F "$env:WINDIR\System32\GWX" /R /D $yes
 icacls "$env:WINDIR\System32\GWX" /C /grant $adminGroup":F" /T
