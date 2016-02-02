@@ -1,4 +1,5 @@
-$kbIDs=("KB3075249", #telemetry for Win7/8.1
+$kbIDs=("KB2976978", #telemetry for Win8/8.1
+        "KB3075249", #telemetry for Win7/8.1
         "KB3080149", #telemetry for Win7/8.1
         "KB3021917", #telemetry for Win7
         "KB3022345", #telemetry
@@ -7,8 +8,11 @@ $kbIDs=("KB3075249", #telemetry for Win7/8.1
         "KB3035583", #Get Windows 10 for Win7sp1/8.1
         "KB2990214", #Get Windows 10 for Win7 without sp1
         "KB2952664", #Get Windows 10 assistant
-        "KB2976978",
-        "KB2876229",
+        "KB3075853", #Update on Win8.1/Server 2012R2
+        "KB3065987", #Update for Windows Update on Win7/Server 2008R2
+        "KB3050265", #Update for Windows Update on Win7
+        "KB3075851", #Update for Windows Update on Win7
+        "KB2902907",
         "KB2953664"
 )
 $sheduledTasks=(
