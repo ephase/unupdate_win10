@@ -55,7 +55,9 @@ function remove_tasks () {
                     Write-Host -Nonewline -ForegroundColor white " Error "
                 }
                 Write-Host -ForegroundColor green "Done"
+            }
             else { Write-Host -ForegroundColor Yellow " Already removed" }
+        }
     }
 }
 
@@ -75,7 +77,7 @@ function hide_update() {
                 $found = 1
                 if (!$update.IsHidden) {
                     $update.IsHidden = "True"
-                    Write-Host -ForegroundColor green "Hidden"
+                    Write-Host -ForegroundColor green "Hi dden"
                 }
                 else {
                     Write-Host -ForegroundColor Yellow "Already hidden"
