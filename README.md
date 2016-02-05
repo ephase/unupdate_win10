@@ -24,7 +24,7 @@ GWX program, uninstall some KB with wusa.exe and hide it to prevent automatic
 reinstallation.
 
 For removing GWX files, tyou'll need to modify `$admingroup` and `$yes` variable
-according to your system locale whith **adminitrator** ans **Y** for english
+according to your system locale with **adminitrator** and **Y** for english
 system
 
 #TODO
