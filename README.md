@@ -23,7 +23,7 @@ This script kill GWX executable, then remove some Scheduled Task about
 GWX program, uninstall some KB with wusa.exe and hide it to prevent automatic 
 reinstallation.
 
-For removing GWX files, tyou'll need to modify `$admingroup` and `$yes` variable
+For removing GWX files, you'll need to modify `$admingroup` and `$yes` variables
 according to your system locale with **adminitrator** and **Y** for english
 system
 
@@ -33,7 +33,7 @@ system
  Administrator's rights
  * Add the possibility to use arguments when calling the script (then ps script 
  could be call from  another script)
- * Remove KB2976978 update (windows say that it's a  *"needed"* one...)
+ * Remove KB2976978 update (Windows say that it's a  *"Required"* one...)
  * ~~Remove GWX Files before uninstalling KB (check remove_gwx_file branch)~~
  * ~~Update the windows update list to hide kb that aren't yet listed~~ 
  * ~~Speed up hide_update~~  
