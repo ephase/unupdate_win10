@@ -102,7 +102,7 @@ function lock_dir {
     Try{ Remove-Item $dir\* -Force -Recurse -ErrorAction SilentlyContinue}
     Catch {Write-Host -ForegroundColor Red "Some files can't be deleted."}
     #lock GWX directory
-    icacls "$dir" /deny *S-1-1-0:`(CI`)`(OI`)F
+    icacls "$dir" /deny *S-1-1-0:`(CI`)`(OI`)F 2>&1 | Out-Null
  }
 
 Write-Host -Nonewline -ForegroundColor white "Searching for GWX process ... "
