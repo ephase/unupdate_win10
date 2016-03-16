@@ -13,7 +13,8 @@ $kbIDs=("KB2976978", #telemetry for Win8/8.1
         "KB3050265", #Update for Windows Update on Win7
         "KB3075851", #Update for Windows Update on Win7
         "KB2902907",
-        "KB2953664"
+        "KB2953664",
+        "KB3012973"  #Windows 10 suggested (Forced?) update
 )
 $sheduledTasks=(
     @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
@@ -24,7 +25,7 @@ $sheduledTasks=(
 
 $gwx_dirs=(
     "$env:windir\system32\GWX",
-    "$env:windir\SysWOW64\GWX"
+    "$env:windir\SysWOW64\GW"
 )
 
 # You need to modify this variable whith administrator group name
