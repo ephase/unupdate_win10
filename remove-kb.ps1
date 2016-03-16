@@ -119,7 +119,7 @@ $gwx_dirs | ForEach {
     lock_dir $_
 }
 
-Write-Host -ForegroundColor white "`nRemoving and locking GWX folders ... "
+Write-Host -ForegroundColor white "`nRemoving Updates... "
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
@@ -143,8 +143,7 @@ Foreach($kbID in $kbIDs){
         Write-Host -ForegroundColor Yellow ("Not installed")
     }
 }
-Write-Host "`nHiding Updates"
-Write-Host "--------------`n"
 
+Write-Host -ForegroundColor white "`nHidding Updates... "
 hide_update $kbIDs
 remove_tasks $sheduledTasks
