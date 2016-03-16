@@ -102,6 +102,8 @@ takeown /F "$env:WINDIR\System32\GWX" /R /D $yes 2>&1 | Out-Null
 icacls "$env:WINDIR\System32\GWX" /C /grant $adminGroup":F" /T 2>&1 | Out-Null
 Try{ Remove-Item $env:WINDIR\System32\GWX\* -Force -Recurse -ErrorAction SilentlyContinue}
 Catch {Write-Host -ForegroundColor Red "Some files can't be deleted."}
+#lock GWX directory
+icacls "$env:WINDIR\System32\GWX" /deny Everyone:(CI)(OI)F 2>&1 | Out-Null
 
 
 Foreach($kbID in $kbIDs){
