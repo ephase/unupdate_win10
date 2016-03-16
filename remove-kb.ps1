@@ -146,4 +146,6 @@ Foreach($kbID in $kbIDs){
 
 Write-Host -ForegroundColor white "`nHidding Updates... "
 hide_update $kbIDs
+
+Write-Host -ForegroundColor white "`nRemoving sheduled tasks ... "
 remove_tasks $sheduledTasks
