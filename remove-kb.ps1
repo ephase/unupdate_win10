@@ -14,7 +14,8 @@ $kbIDs=("KB2976978", #telemetry for Win8/8.1
         "KB3075851", #Update for Windows Update on Win7
         "KB2902907",
         "KB2953664",
-        "KB3012973"  #Windows 10 suggested (Forced?) update
+        "KB3012973", #Windows 10 suggested (Forced?) update
+        "KB3150513"  #Another Windows10 forced update
 )
 $sheduledTasks=(
     @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
