@@ -34,7 +34,8 @@ $sheduledTasks=(
 
 $gwx_dirs=(
     "$env:windir\system32\GWX",
-    "$env:windir\SysWOW64\GWX"
+    "$env:windir\SysWOW64\GWX",
+    "C:\`$WINDOWS-~BT"
 )
 
 # You need to modify this variable whith administrator group name
