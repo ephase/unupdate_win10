@@ -1,22 +1,30 @@
-$kbIDs=("KB2976978", #telemetry for Win8/8.1
-        "KB3075249", #telemetry for Win7/8.1
-        "KB3080149", #telemetry for Win7/8.1
-        "KB3021917", #telemetry for Win7
-        "KB3022345", #telemetry
-        "KB3068708", #telemetry
-        "KB3044374", #Get Windows 10 for Win8.1
-        "KB3035583", #Get Windows 10 for Win7sp1/8.1
-        "KB2990214", #Get Windows 10 for Win7 without sp1
-        "KB2952664", #Get Windows 10 assistant
-        "KB3075853", #Update on Win8.1/Server 2012R2
-        "KB3065987", #Update for Windows Update on Win7/Server 2008R2
-        "KB3050265", #Update for Windows Update on Win7
-        "KB3075851", #Update for Windows Update on Win7
+$kbIDs=(
         "KB2902907",
         "KB2953664",
-        "KB3012973", #Windows 10 suggested (Forced?) update
-        "KB3150513"  #Another Windows10 forced update
+		"KB2976978", #telemetry for Win8/8.1
+        "KB2990214", #Get Windows 10 for Win7 without sp1
+        "KB2952664", #Get Windows 10 assistant
+		"KB3012973", #Windows 10 suggested (Forced?) update
+		"KB3021917", #telemetry for Win7
+        "KB3022345", #telemetry
+		"KB3035583", #Get Windows 10 for Win7sp1/8.1
+        "KB3044374", #Get Windows 10 for Win8.1
+		"KB3050265", #Update for Windows Update on Win7
+        "KB3065987", #Update for Windows Update on Win7/Server 2008R2
+		"KB3068708", #telemetry
+		"KB3075249", #telemetry for Win7/8.1
+		"KB3075851", #Update for Windows Update on Win7
+        "KB3075853", #Update on Win8.1/Server 2012R2
+        "KB3080149", #telemetry for Win7/8.1
+		"KB3081437", #Windows 10 compatibility update
+		"KB3081454", #Windows 10 compatibility update
+		"KB3083324", #Windows 7 to Windows 10 preparation update
+		"KB3083325", #Windows 8 to Windows 10 preparation update
+		"KB3150513", #Windows 10 compatibility modile for Win7/Win8 (may 2016)
+		"KB3112336", #Windows 8.1 > Windows 10
+		"KB3112343"  #Windows 7 - 8.1 > Windows 10
 )
+
 $sheduledTasks=(
     @{name = "launchtrayprocess"; directory = "\Microsoft\Windows\Setup\GWX"},
     @{name = "refreshgwxconfig"; directory = "\Microsoft\Windows\Setup\GWX"},
@@ -33,6 +41,25 @@ $gwx_dirs=(
 # Here for French Windows this is Administrateurs
 $adminGroup="Administrateurs"
 $yes="O"
+
+function add_reg_object {
+    param (
+        $reg_path,
+        $reg_name,
+        $reg_value
+    )
+    if (!(Test-Path $reg_path)){
+        Write-Host -nonewline "creating $reg_path ..."
+        New-Item -Path $reg_path -Force
+    }
+    if ($reg_name -and $reg_value){
+        Write-Host "Reg key $reg_name created with value $reg_value"
+        New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -Force      
+    }
+    else {
+        Write-Host "[ERROR] add_reg_value : no `$reg_name or `$reg_value parameters..."
+    }   
+}
 
 function remove_tasks () {
     param($taskList)
@@ -150,3 +177,6 @@ hide_update $kbIDs
 
 Write-Host -ForegroundColor white "`nRemoving sheduled tasks ... "
 remove_tasks $sheduledTasks
+
+Write-Host -ForegroundColor white "`nReg update ... "
+add_reg_object "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0"
