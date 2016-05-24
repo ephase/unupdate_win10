@@ -179,4 +179,4 @@ Write-Host -ForegroundColor white "`nRemoving sheduled tasks ... "
 remove_tasks $sheduledTasks
 
 Write-Host -ForegroundColor white "`nReg update ... "
-add_reg_object "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0"
+add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0"
