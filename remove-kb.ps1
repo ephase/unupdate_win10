@@ -99,7 +99,7 @@ function hide_update() {
     param($kbList)
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
-    $searcher.Online = $false
+    #$searcher.Online = $false
     $criteria = "IsInstalled=0"
     $result = $searcher.Search($criteria)
     Foreach ($kb in $kbList){
