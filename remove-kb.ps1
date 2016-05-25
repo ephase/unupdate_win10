@@ -1,28 +1,28 @@
 $kbIDs=(
         "KB2902907",
         "KB2953664",
-		"KB2976978", #telemetry for Win8/8.1
+        "KB2976978", #telemetry for Win8/8.1
         "KB2990214", #Get Windows 10 for Win7 without sp1
         "KB2952664", #Get Windows 10 assistant
-		"KB3012973", #Windows 10 suggested (Forced?) update
-		"KB3021917", #telemetry for Win7
+        "KB3012973", #Windows 10 suggested (Forced?) update
+        "KB3021917", #telemetry for Win7
         "KB3022345", #telemetry
-		"KB3035583", #Get Windows 10 for Win7sp1/8.1
+        "KB3035583", #Get Windows 10 for Win7sp1/8.1
         "KB3044374", #Get Windows 10 for Win8.1
-		"KB3050265", #Update for Windows Update on Win7
+        "KB3050265", #Update for Windows Update on Win7
         "KB3065987", #Update for Windows Update on Win7/Server 2008R2
-		"KB3068708", #telemetry
-		"KB3075249", #telemetry for Win7/8.1
-		"KB3075851", #Update for Windows Update on Win7
+        "KB3068708", #telemetry
+        "KB3075249", #telemetry for Win7/8.1
+        "KB3075851", #Update for Windows Update on Win7
         "KB3075853", #Update on Win8.1/Server 2012R2
         "KB3080149", #telemetry for Win7/8.1
-		"KB3081437", #Windows 10 compatibility update
-		"KB3081454", #Windows 10 compatibility update
-		"KB3083324", #Windows 7 to Windows 10 preparation update
-		"KB3083325", #Windows 8 to Windows 10 preparation update
-		"KB3150513", #Windows 10 compatibility modile for Win7/Win8 (may 2016)
-		"KB3112336", #Windows 8.1 > Windows 10
-		"KB3112343"  #Windows 7 - 8.1 > Windows 10
+        "KB3081437", #Windows 10 compatibility update
+        "KB3081454", #Windows 10 compatibility update
+        "KB3083324", #Windows 7 to Windows 10 preparation update
+        "KB3083325", #Windows 8 to Windows 10 preparation update
+        "KB3150513", #Windows 10 compatibility modile for Win7/Win8 (may 2016)
+        "KB3112336", #Windows 8.1 > Windows 10
+        "KB3112343"  #Windows 7 - 8.1 > Windows 10
 )
 
 $sheduledTasks=(
@@ -101,8 +101,8 @@ function hide_update() {
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
     #$searcher.Online = $false
-    $criteria = "IsInstalled=0"
-    $result = $searcher.Search($criteria)
+    #$criteria = "IsInstalled=0"
+    $result = $searcher.Search()
     Foreach ($kb in $kbList){
         Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
         $id = $kb.Replace("KB","")
