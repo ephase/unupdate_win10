@@ -1,4 +1,4 @@
-$kbIDs=(
+﻿$kbIDs=(
         "KB2902907",
         "KB2953664",
         "KB2976978", #telemetry for Win8/8.1
@@ -51,11 +51,11 @@ function add_reg_object {
     )
     if (!(Test-Path $reg_path)){
         Write-Host -nonewline "creating $reg_path ..."
-        New-Item -Path $reg_path -Force
+        New-Item -Path $reg_path -Force | Out-Null 
     }
     if ($reg_name -and $reg_value){
         Write-Host "Reg key $reg_name created with value $reg_value"
-        New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -Force      
+        New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -Force | Out-Null   
     }
     else {
         Write-Host "[ERROR] add_reg_value : no `$reg_name or `$reg_value parameters..."
@@ -98,6 +98,7 @@ function remove_tasks () {
 
 function hide_update() {
     param($kbList)
+    Write-Host -ForegroundColor Gray "Creating updated database, this take 5 to 10 minutes.`nPlease wait ...`n"
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
     $searcher.Online = $true
@@ -109,8 +110,11 @@ function hide_update() {
         $id = $kb.Replace("KB","")
         $found = 0
         Foreach ($update in $result.Updates)  {
-            if ($update.KBArticleIDs -match $id) {
-                $found = 1
+            if ($update.KBArticleIDs -eq $id) {
+                #Some updates have ... updates
+                if ($found) {
+                    Write-Host -NoNewline -ForegroundColor Gray "   └ $kb : "
+                }
                 if (!$update.IsHidden) {
                     $update.IsHidden = "True"
                     Write-Host -ForegroundColor green "Hidden"
@@ -118,6 +122,7 @@ function hide_update() {
                 else {
                     Write-Host -ForegroundColor Yellow "Already hidden"
                 }
+                $found = 1
             }
         }
         if (!$found){ Write-Host -ForegroundColor Red "Not found" }
@@ -144,12 +149,12 @@ if (Get-Process -name GWX -ErrorAction SilentlyContinue) {
 }
 else { Write-Host -ForegroundColor Yellow ("Not running")}
 
-Write-Host -ForegroundColor white "`nRemoving and locking GWX folders ... "
+Write-Host -ForegroundColor white "`nRemoving and locking GWX folders...`n--------------------------------- "
 $gwx_dirs | ForEach {
     lock_dir $_
 }
 
-Write-Host -ForegroundColor white "`nRemoving Updates... "
+Write-Host -ForegroundColor white "`nRemoving Updates...`n------------------- "
 
 Foreach($kbID in $kbIDs){
     $kbNum = $kbID.Replace("KB","")
@@ -174,12 +179,12 @@ Foreach($kbID in $kbIDs){
     }
 }
 
-Write-Host -ForegroundColor white "`nHidding Updates... "
+Write-Host -ForegroundColor white "`nHiding Updates...`n---------------- "
 hide_update $kbIDs
 
-Write-Host -ForegroundColor white "`nRemoving sheduled tasks ... "
+Write-Host -ForegroundColor white "`nRemoving sheduled tasks...`n--------------------------"
 remove_tasks $sheduledTasks
 
-Write-Host -ForegroundColor white "`nReg update ... "
+Write-Host -ForegroundColor white "`nUpdate Registrery to prevent Win10 automatic installation...`n------------------------------------------------------------"
 add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0"
 add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" "DisableOSUpgrade" "0"
