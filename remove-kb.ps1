@@ -101,7 +101,7 @@ function hide_update() {
     $session = New-Object -ComObject "Microsoft.Update.Session"
     $searcher = $session.CreateUpdateSearcher()
     #$searcher.Online = $false
-    $criteria = "IsInstalled=0"
+    $criteria = ""
     $result = $searcher.Search($criteria)
     Foreach ($kb in $kbList){
         Write-Host -NoNewline -ForegroundColor White "Hide $kb : "
