@@ -194,3 +194,4 @@ remove_tasks $sheduledTasks
 Write-Host -ForegroundColor white "`nUpdate Registrery to prevent Win10 automatic installation...`n------------------------------------------------------------"
 add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0" "DWord"
 add_reg_object "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" "DisableOSUpgrade" "1" "DWord"
+add_reg_object "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GWX" "DisableGWX" "1" "DWord" 
