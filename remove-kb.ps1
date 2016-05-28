@@ -47,7 +47,8 @@ function add_reg_object {
     param (
         $reg_path,
         $reg_name,
-        $reg_value
+        $reg_value,
+        $value_type
     )
     if (!(Test-Path $reg_path)){
         Write-Host -nonewline "creating $reg_path ..."
@@ -55,7 +56,12 @@ function add_reg_object {
     }
     if ($reg_name -and $reg_value){
         Write-Host "Reg key $reg_name created with value $reg_value"
-        New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -Force | Out-Null   
+        if ($value_type){
+            New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -PropertyType $value_type -Force | Out-Null
+        }    
+        else {
+            New-ItemProperty -Path $reg_path -Name $reg_name -Value $reg_value -Force | Out-Null
+         }
     }
     else {
         Write-Host "[ERROR] add_reg_value : no `$reg_name or `$reg_value parameters..."
@@ -186,5 +192,5 @@ Write-Host -ForegroundColor white "`nRemoving sheduled tasks...`n---------------
 remove_tasks $sheduledTasks
 
 Write-Host -ForegroundColor white "`nUpdate Registrery to prevent Win10 automatic installation...`n------------------------------------------------------------"
-add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0"
-add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" "DisableOSUpgrade" "1"
+add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\OSUpgrade" "AllowOSUpgrade" "0" "DWord"
+add_reg_object "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" "DisableOSUpgrade" "1" "DWord"
