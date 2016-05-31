@@ -1,6 +1,6 @@
 ﻿$kbIDs=(
         "KB2902907",
-        "KB2953664",
+        "KB2952664", #Compatibility test for Win7
         "KB2976978", #telemetry for Win8/8.1
         "KB2990214", #Get Windows 10 for Win7 without sp1
         "KB2952664", #Get Windows 10 assistant
@@ -35,7 +35,7 @@ $sheduledTasks=(
 $gwx_dirs=(
     "$env:windir\system32\GWX",
     "$env:windir\SysWOW64\GWX",
-    "C:\`$WINDOWS-~BT"
+    "C:\`$WINDOWS.~BT"
 )
 
 # You need to modify this variable whith administrator group name
